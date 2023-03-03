@@ -116,20 +116,61 @@
 
 
   </head>
+ 
   <body>
     <h1>Equipment Manager</h1>
     <form>
       <label for="code">Unique Code:</label>
-      <input type="text" id="code" name="code" required>
+      <input type="text" id="code" name="code" required><br>
 
       <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required>
+      <input type="text" id="name" name="name" required><br>
 
       <label for="description">Description:</label>
-      <textarea id="description" name="description" required></textarea>
+      <textarea id="description" name="description" required></textarea><br>
 
       <label for="picture">Picture:</label>
       <div id="picture-preview"></div>
       <button type="button" id="picture-button">Take Picture</button>
 
-      <button type="submit">Save
+      <button type="submit">Save Equipment</button>
+    </form>
+
+    <script>
+      const pictureButton = document.getElementById('picture-button');
+      const picturePreview = document.getElementById('picture-preview');
+
+      pictureButton.addEventListener('click', () => {
+        // Launch the device camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(stream => {
+            // Create a video element to display the camera stream
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.autoplay = true;
+
+            // Create a canvas element to capture the picture
+            const canvas = document.createElement('canvas');
+            canvas.width = 320;
+            canvas.height = 240;
+
+            // When the user clicks the "Take Picture" button, capture the picture
+            pictureButton.addEventListener('click', () => {
+              const context = canvas.getContext('2d');
+              context.drawImage(video, 0, 0, canvas.width, canvas.height);
+              const dataUrl = canvas.toDataURL('image/jpeg');
+
+              // Display the picture preview
+              const img = document.createElement('img');
+              img.src = dataUrl;
+              picturePreview.appendChild(img);
+            });
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      });
+    </script>
+  </body>
+</html>
+  
