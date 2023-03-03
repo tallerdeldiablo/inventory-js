@@ -1,0 +1,2 @@
+# inventory-js
+Inventory app 
