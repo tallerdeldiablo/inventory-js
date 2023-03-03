@@ -2,99 +2,127 @@
 <html>
   <head>
     <title>Equipment Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: sans-serif;
+        background-color: #f0f0f0;
+        padding: 1rem;
+      }
+
+      h1, h2 {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      form {
+        background-color: #fff;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      form label {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      form input[type="text"], form textarea {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
+        margin-bottom: 1rem;
+      }
+
+      form textarea {
+        height: 6rem;
+      }
+
+      form button {
+        display: block;
+        margin: 0 auto;
+        padding: 0.5rem 1rem;
+        border: none;
+        background-color: #4caf50;
+        color: #fff;
+        border-radius: 0.25rem;
+        cursor: pointer;
+      }
+
+      #picture-preview {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      #picture-preview img {
+        max-width: 100%;
+        max-height: 240px;
+        margin: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
+      }
+
+      #equipment-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #equipment-list li {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      #equipment-list li span {
+        flex-basis: 100%;
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+
+      #equipment-list li img {
+        max-width: 100%;
+        max-height: 240px;
+        margin-top: 1rem;
+      }
+
+      @media (min-width: 768px) {
+        form {
+          max-width: 600px;
+          margin: 0 auto;
+        }
+      }
+    </style>
   </head>
   <body>
     <h1>Equipment Manager</h1>
     <form>
       <label for="code">Unique Code:</label>
-      <input type="text" id="code" name="code" required><br>
+      <input type="text" id="code" name="code" required>
 
       <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required><br>
+      <input type="text" id="name" name="name" required>
 
       <label for="description">Description:</label>
-      <textarea id="description" name="description" required></textarea><br>
+      <textarea id="description" name="description" required></textarea>
 
       <label for="picture">Picture:</label>
       <div id="picture-preview"></div>
       <button type="button" id="picture-button">Take Picture</button>
 
-      <button type="submit">Save Equipment</button>
-    </form>
-
-    <h2>Equipment List</h2>
-    <ul id="equipment-list"></ul>
-
-    <script>
-      const pictureButton = document.getElementById('picture-button');
-      const picturePreview = document.getElementById('picture-preview');
-      const equipmentList = document.getElementById('equipment-list');
-
-      pictureButton.addEventListener('click', () => {
-        // Launch the device camera
-        navigator.mediaDevices.getUserMedia({ video: true })
-          .then(stream => {
-            // Create a video element to display the camera stream
-            const video = document.createElement('video');
-            video.srcObject = stream;
-            video.autoplay = true;
-
-            // Create a canvas element to capture the picture
-            const canvas = document.createElement('canvas');
-            canvas.width = 320;
-            canvas.height = 240;
-
-            // When the user clicks the "Take Picture" button, capture the picture
-            pictureButton.addEventListener('click', () => {
-              const context = canvas.getContext('2d');
-              context.drawImage(video, 0, 0, canvas.width, canvas.height);
-              const dataUrl = canvas.toDataURL('image/jpeg');
-
-              // Display the picture preview
-              const img = document.createElement('img');
-              img.src = dataUrl;
-              picturePreview.appendChild(img);
-            });
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      });
-
-      function addEquipment(code, name, description, picture) {
-        // Create a new equipment item
-        const item = document.createElement('li');
-        const codeSpan = document.createElement('span');
-        codeSpan.textContent = code;
-        const nameSpan = document.createElement('span');
-        nameSpan.textContent = name;
-        const descriptionSpan = document.createElement('span');
-        descriptionSpan.textContent = description;
-        const pictureImg = document.createElement('img');
-        pictureImg.src = picture;
-        pictureImg.width = 200;
-        item.appendChild(codeSpan);
-        item.appendChild(nameSpan);
-        item.appendChild(descriptionSpan);
-        item.appendChild(pictureImg);
-
-        // Add the equipment item to the list
-        equipmentList.appendChild(item);
-      }
-
-      // Load existing equipment items from storage
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.startsWith('equipment_')) {
-          const equipment = JSON.parse(localStorage.getItem(key));
-          addEquipment(equipment.code, equipment.name, equipment.description, equipment.picture);
-        }
-      }
-
-      // When the form is submitted, save the equipment to storage and display it in the list
-      const form = document.querySelector('form');
-      form.addEventListener('submit', event => {
-        event.preventDefault();
-
-        // Save the equipment to storage
-        const
+      <button type="submit">Save
