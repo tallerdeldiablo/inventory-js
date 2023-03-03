@@ -1,4 +1,4 @@
-It's<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Equipment Manager</title>
@@ -137,39 +137,92 @@ It's<!DOCTYPE html>
     </form>
 
     <script>
-      const pictureButton = document.getElementById('picture-button');
-      const picturePreview = document.getElementById('picture-preview');
+const pictureButton = document.getElementById('picture-button');
+const picturePreview = document.getElementById('picture-preview');
+const equipmentList = document.getElementById('equipment-list');
 
+pictureButton.addEventListener('click', () => {
+  // Launch the device camera
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+      // Create a video element to display the camera stream
+      const video = document.createElement('video');
+      video.srcObject = stream;
+      video.autoplay = true;
+
+      // Create a canvas element to capture the picture
+      const canvas = document.createElement('canvas');
+      canvas.width = 320;
+      canvas.height = 240;
+
+      // When the user clicks the "Take Picture" button, capture the picture
       pictureButton.addEventListener('click', () => {
-        // Launch the device camera
-        navigator.mediaDevices.getUserMedia({ video: true })
-          .then(stream => {
-            // Create a video element to display the camera stream
-            const video = document.createElement('video');
-            video.srcObject = stream;
-            video.autoplay = true;
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg');
 
-            // Create a canvas element to capture the picture
-            const canvas = document.createElement('canvas');
-            canvas.width = 320;
-            canvas.height = 240;
-
-            // When the user clicks the "Take Picture" button, capture the picture
-            pictureButton.addEventListener('click', () => {
-              const context = canvas.getContext('2d');
-              context.drawImage(video, 0, 0, canvas.width, canvas.height);
-              const dataUrl = canvas.toDataURL('image/jpeg');
-
-              // Display the picture preview
-              const img = document.createElement('img');
-              img.src = dataUrl;
-              picturePreview.appendChild(img);
-            });
-          })
-          .catch(error => {
-            console.error(error);
-          });
+        // Display the picture preview
+        const img = document.createElement('img');
+        img.src = dataUrl;
+        picturePreview.appendChild(img);
       });
+    })
+    .catch(error => {
+      console.error(error);
+    });
+});
+
+function addEquipment(code, name, description, picture) {
+  // Create a new equipment item
+  const item = document.createElement('li');
+  const codeSpan = document.createElement('span');
+  codeSpan.textContent = code;
+  const nameSpan = document.createElement('span');
+  nameSpan.textContent = name;
+  const descriptionSpan = document.createElement('span');
+  descriptionSpan.textContent = description;
+  const pictureImg = document.createElement('img');
+  pictureImg.src = picture;
+  pictureImg.width = 200;
+  item.appendChild(codeSpan);
+  item.appendChild(nameSpan);
+  item.appendChild(descriptionSpan);
+  item.appendChild(pictureImg);
+
+  // Add the equipment item to the list
+  equipmentList.appendChild(item);
+
+  // Save the equipment to local storage
+  const equipment = { code, name, description, picture };
+  localStorage.setItem(`equipment_${code}`, JSON.stringify(equipment));
+}
+
+// Load existing equipment items from storage
+for (let i = 0; i < localStorage.length; i++) {
+  const key = localStorage.key(i);
+  if (key.startsWith('equipment_')) {
+    const equipment = JSON.parse(localStorage.getItem(key));
+    addEquipment(equipment.code, equipment.name, equipment.description, equipment.picture);
+  }
+}
+
+// When the form is submitted, save the equipment to local storage and display it in the list
+const form = document.querySelector('form');
+form.addEventListener('submit', event => {
+  event.preventDefault();
+
+  // Save the equipment to local storage
+  const code = document.getElementById('code').value;
+  const name = document.getElementById('name').value;
+  const description = document.getElementById('description').value;
+  const picture = picturePreview.querySelector('img').src;
+  addEquipment(code, name, description, picture);
+
+  // Clear the form
+  form.reset();
+  picturePreview.innerHTML = '';
+});
+
     </script>
   </body>
 </html>
