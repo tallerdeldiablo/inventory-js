@@ -1,0 +1,69 @@
+// Define a class for items in the inventory
+class InventoryItem {
+  constructor(name, quantity, price) {
+    this.name = name;
+    this.quantity = quantity;
+    this.price = price;
+  }
+  
+  // Method to calculate the total value of an item
+  getTotalValue() {
+    return this.quantity * this.price;
+  }
+}
+
+// Define an array to store inventory items
+let inventory = [];
+
+// Function to add a new item to the inventory
+function addItem(name, quantity, price) {
+  let newItem = new InventoryItem(name, quantity, price);
+  inventory.push(newItem);
+}
+
+// Function to remove an item from the inventory by name
+function removeItemByName(name) {
+  inventory = inventory.filter(item => item.name !== name);
+}
+
+// Function to update the quantity of an item in the inventory
+function updateQuantity(name, newQuantity) {
+  let item = inventory.find(item => item.name === name);
+  if (item) {
+    item.quantity = newQuantity;
+  }
+}
+
+// Function to update the price of an item in the inventory
+function updatePrice(name, newPrice) {
+  let item = inventory.find(item => item.name === name);
+  if (item) {
+    item.price = newPrice;
+  }
+}
+
+// Function to calculate the total value of the inventory
+function getTotalValue() {
+  let total = 0;
+  for (let i = 0; i < inventory.length; i++) {
+    total += inventory[i].getTotalValue();
+  }
+  return total;
+}
+
+// Example usage:
+addItem("apple", 10, 0.5);
+addItem("banana", 5, 0.25);
+console.log(inventory);
+// Output: [InventoryItem { name: 'apple', quantity: 10, price: 0.5 }, InventoryItem { name: 'banana', quantity: 5, price: 0.25 }]
+
+updateQuantity("apple", 20);
+console.log(inventory);
+// Output: [InventoryItem { name: 'apple', quantity: 20, price: 0.5 }, InventoryItem { name: 'banana', quantity: 5, price: 0.25 }]
+
+console.log(getTotalValue());
+// Output: 12.5
+
+removeItemByName("banana");
+console.log(inventory);
+// Output: [InventoryItem { name: 'apple', quantity: 20, price: 0.5 }]
