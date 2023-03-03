@@ -234,6 +234,42 @@ form.addEventListener('submit', event => {
   picturePreview.innerHTML = '';
 });
 
+
+//Dissssplay
+const equipmentList = document.getElementById('equipment-list');
+
+function displayEquipment() {
+  // Clear the equipment list
+  equipmentList.innerHTML = '';
+
+  // Load existing equipment items from storage and add them to the list
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith('equipment_')) {
+      const equipment = JSON.parse(localStorage.getItem(key));
+      const item = document.createElement('li');
+      const codeSpan = document.createElement('span');
+      codeSpan.textContent = equipment.code;
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = equipment.name;
+      const descriptionSpan = document.createElement('span');
+      descriptionSpan.textContent = equipment.description;
+      const pictureImg = document.createElement('img');
+      pictureImg.src = equipment.picture;
+      pictureImg.width = 200;
+      item.appendChild(codeSpan);
+      item.appendChild(nameSpan);
+      item.appendChild(descriptionSpan);
+      item.appendChild(pictureImg);
+      equipmentList.appendChild(item);
+    }
+  }
+}
+
+// Display the initial equipment list
+displayEquipment();
+
+
     </script>
   </body>
 </html>
