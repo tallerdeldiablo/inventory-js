@@ -137,9 +137,18 @@
     </form>
 
     <script>
+
 const pictureButton = document.getElementById('picture-button');
 const picturePreview = document.getElementById('picture-preview');
 const equipmentList = document.getElementById('equipment-list');
+
+// Generate a unique code for new equipment
+function generateCode() {
+  const prefix = 'EQUIP-';
+  const timestamp = Date.now().toString(36);
+  const random = Math.random().toString(36).slice(2, 8);
+  return prefix + timestamp + '-' + random;
+}
 
 pictureButton.addEventListener('click', () => {
   // Launch the device camera
@@ -172,7 +181,10 @@ pictureButton.addEventListener('click', () => {
     });
 });
 
-function addEquipment(code, name, description, picture) {
+function addEquipment(name, description, picture) {
+  // Generate a unique code for the new equipment
+  const code = generateCode();
+
   // Create a new equipment item
   const item = document.createElement('li');
   const codeSpan = document.createElement('span');
@@ -202,7 +214,7 @@ for (let i = 0; i < localStorage.length; i++) {
   const key = localStorage.key(i);
   if (key.startsWith('equipment_')) {
     const equipment = JSON.parse(localStorage.getItem(key));
-    addEquipment(equipment.code, equipment.name, equipment.description, equipment.picture);
+    addEquipment(equipment.name, equipment.description, equipment.picture);
   }
 }
 
@@ -212,11 +224,10 @@ form.addEventListener('submit', event => {
   event.preventDefault();
 
   // Save the equipment to local storage
-  const code = document.getElementById('code').value;
   const name = document.getElementById('name').value;
   const description = document.getElementById('description').value;
   const picture = picturePreview.querySelector('img').src;
-  addEquipment(code, name, description, picture);
+  addEquipment(name, description, picture);
 
   // Clear the form
   form.reset();
